@@ -1,0 +1,122 @@
+@font-face {
+  font-family: "Montserrat";
+  src: url(/Montserrat/Montserrat-VariableFont_wght.ttf);
+}
+
+body {
+  font-family: Montserrat, Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+.main {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  background-image: linear-gradient(
+    45deg,
+    rgb(95, 32, 32),
+    rgb(52, 38, 102),
+    rgb(21, 23, 168)
+  );
+  min-height: 100vh;
+  height: 100%;
+  color: rgb(175, 5, 161);
+}
+
+.imgTitle {
+  max-width: 100vw;
+}
+
+.coop {
+  border-radius: 20px;
+  padding: 1rem;
+  margin: 0 1rem;
+  background-image: linear-gradient(
+    135deg,
+    rgb(170, 253, 161),
+    rgb(100, 221, 154),
+    rgb(61, 165, 255),
+    rgb(58, 107, 165)
+  );
+}
+
+.coopTitle {
+  font-size: 2rem;
+  margin: 0 0 1rem 0;
+  text-align: center;
+  font-weight: 700;
+}
+
+.inputBlock {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 1rem;
+}
+
+::placeholder {
+  color: rgb(175, 5, 161);
+}
+
+.inputField {
+  font-size: 1.5rem;
+  width: 80px;
+  border: none;
+  border-radius: 10px;
+}
+
+.eggBtn {
+  background-color: rgb(175, 5, 161);
+  border: none;
+  border-radius: 10px;
+  color: rgb(100, 221, 154);
+  padding: 0.5rem;
+}
+
+.toDoBtn {
+  background-color: rgb(235, 232, 55);
+  border: none;
+  border-radius: 10px;
+  color: rgb(24, 3, 211);
+  padding: 0.5rem;
+}
+
+.checkList {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.addBtn,
+.Empty {
+  font-family: Montserrat, Arial, Helvetica, sans-serif;
+  font-size: 2rem;
+  font-weight: 600;
+  box-sizing: border-box;
+  margin: 1rem;
+  padding: 1rem;
+  border-radius: 20px;
+  background-image: radial-gradient(circle, yellow, orange, red);
+}
+
+.countBtn {
+  border-radius: 20px;
+  border: none;
+  background-image: radial-gradient(
+    circle,
+    rgb(235, 12, 216),
+    rgb(206, 157, 157)
+  );
+  width: 1.5rem;
+  font-size: 1.5rem;
+}
+.counting {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 1rem;
+  font-size: 1.5rem;
+}
