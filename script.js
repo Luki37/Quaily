@@ -52,7 +52,9 @@ function addNewPage() {}
 
 /*Stall im Dashboard anlegen*/
 function createCoopDashboard() {
-  coopList = newCoopList;
+  if (newCoopList !== null) {
+    coopList = newCoopList;
+  }
 
   const coopDash = document.createElement("div");
   coopDash.classList.add("coop");
@@ -88,7 +90,7 @@ function createCoopDashboard() {
 
 /*Funktion neuen Stall hinzufügen*/
 function addCoop() {
-  addNewPage();
+  const newDetails = addNewPage();
   const newCoop = createCoopDashboard();
 
   const coopElement = {
