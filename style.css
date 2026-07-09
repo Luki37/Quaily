@@ -29,6 +29,7 @@ body {
 }
 
 .coop {
+  position: relative;
   border-radius: 20px;
   display: flex;
   flex-direction: column;
@@ -43,8 +44,17 @@ body {
   );
 }
 
+.toggleBtn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: fit-content;
+  border-radius: 15px;
+  border: none;
+  background-color: rgb(255, 255, 255, 0);
+}
+
 .coopTitle {
-  text-decoration: none;
   font-size: 2rem;
   margin: 0 0 1rem 0;
   width: 100%;
@@ -93,8 +103,11 @@ body {
   gap: 1rem;
 }
 
-.addBtn,
-.Empty {
+.hidden {
+  display: none;
+}
+
+.addBtn {
   font-family: Montserrat, Arial, Helvetica, sans-serif;
   font-size: 2rem;
   font-weight: 600;
@@ -122,4 +135,21 @@ body {
   justify-content: center;
   gap: 1rem;
   font-size: 1.5rem;
+  margin-top: 2rem;
+}
+
+.empty {
+  font-family: Montserrat, Arial, Helvetica, sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  box-sizing: border-box;
+  margin: 1rem;
+  width: 90%;
+  padding: 1rem;
+  border-radius: 20px;
+  background-image: radial-gradient(circle, yellow, orange, red);
+}
+
+p {
+  margin: 1rem;
 }
