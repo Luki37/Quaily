@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Qualiy</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js" defer></script>
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+    <link rel="manifest" href="site.webmanifest" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="192x192"
+      href="android-chrome-192x192.png"
+    />
+  </head>
+  <body>
+    <div id="wrapperCoop">
+      <div class="main">
+        <img class="imgTitle" src="titelbild3.png" alt="Logo und Titel" />
+        <button class="Empty" onclick="emptyCoop()">Emptying the coop</button>
+        <div id="wrapperCoop"></div>
+        <div class="coop">
+          <p class="coopTitle">Stall 1</p>
+          <div class="counting">
+            <button class="countBtn" onclick="minusQuail()">-</button
+            ><span id="countQuail">0 Wachteln</span
+            ><button class="countBtn" onclick="plusQuail()">+</button>
+          </div>
+          <p>Gesammelte Eier Heute: 0</p>
+          <p id="eggsTotal">Total gesammelte Eier: 0</p>
+          <p id="averageEggPerDay">Tagesdurchschnitt Eier: 0</p>
+          <p>Ausmisten fällig in: 5 Tagen</p>
+          <p>Beleuchtung einschalten fällig in: 120 Tagen</p>
+          <p>Beleuchtung ausschalten fällig in: 120 Tagen</p>
+          <p>X neue Wachteln am: 25.05.2026</p>
+          <p>X Wachteln ausgestallt am: 01.07.2026</p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
