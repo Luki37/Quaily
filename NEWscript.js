@@ -34,6 +34,15 @@ if (newCoopList !== null) {
 
 checkDailyReset();
 
+newCoopList.forEach((coopElement) => {
+  const pastTime = Date.now() - coopElement.startDate;
+  const pastDays = Math.ceil(pastTime / (1000 * 60 * 60 * 24));
+  let average = coopElement.eggsTotal / pastDays;
+  coopElement.eggsAverage = average;
+  console.log(coopElement.eggsAverage);
+  saveCoopListToLocalstorage();
+});
+
 function addCoop() {
   const coopName = prompt("Name für den Stall eingeben");
   if (coopName === null) {
