@@ -11,7 +11,7 @@ function saveCoopListToLocalstorage() {
 function saveArchiveListToLocalstorage() {
   localStorage.setItem("archiveList", JSON.stringify(archiveList));
 }
-
+/* fragt ab ob Liste im Localstorage und läd diese, wenn vorhanden*/
 if (newCoopList !== null) {
   coopList = newCoopList;
   coopList.forEach((coopElement) => {
@@ -32,28 +32,37 @@ if (newCoopList !== null) {
   });
 }
 
+/* checkt beim neuladen der Seite ob der tägliche 
+Eierzähler zurückgesetzt werden soll*/
 checkDailyReset();
 
+/* berechnet täglicher durchschnittswert eier*/
 newCoopList.forEach((coopElement) => {
+  /* rechnet aktuelle Zeit minus startzeit*/
   const pastTime = Date.now() - coopElement.startDate;
+  /* teilt durch anzahl Millisekunden pro Tag*/
   const pastDays = Math.ceil(pastTime / (1000 * 60 * 60 * 24));
+  /* berechnet Durchschnitt*/
   let average = coopElement.eggsTotal / pastDays;
   coopElement.eggsAverage = average;
-  console.log(coopElement.eggsAverage);
+
   saveCoopListToLocalstorage();
 });
 
 function addCoop() {
+  /* öffnet mit prompt ein fenster um Namen zu definieren*/
   const coopName = prompt("Name für den Stall eingeben");
   if (coopName === null) {
     return;
   }
+  /* definiert einzigartige ID ahnhand Date.now*/
   const coopID = Date.now();
   createCoop(coopName, coopID);
-
+  /* definiert zeitpunkt für reset täglicher eier*/
   const heuteAbend = new Date();
   heuteAbend.setHours(23, 59, 0, 0);
 
+  /* fügt die für berechnungen relevanten werte dem onjekt für das array hinzu*/
   const coopElement = {
     name: coopName,
     id: coopID,
@@ -61,17 +70,20 @@ function addCoop() {
     eggsDay: 0,
     eggsTotal: 0,
     eggsAverage: 0,
+    /*gibt die Anzahl der Millisekunden zurück, die zwischen dem 1. Januar 1970 
+    (00:00:00 Uhr UTC) und dem in der Variablen heuteAbend gespeicherten 
+    Zeitpunkt vergangen sind*/
     dailyEggReset: heuteAbend.getTime(),
-    startDate: 0,
+    startDate: Date.now(),
     endDate: 0,
   };
 
   coopList.push(coopElement);
-  console.log(coopList);
 
   saveCoopListToLocalstorage();
   location.reload();
 
+  /*gibt die elemente für weitere Verwendung ausserhalb der function weiter*/
   return { coopName: coopName, coopID: coopID, coopElement: coopElement };
 }
 
@@ -139,7 +151,7 @@ function createCoop(
   averageEggPerDay.innerText = "Tagesdurchschnitt Eier: " + eggsAverage;
   const empty = document.createElement("button");
   empty.classList.add("empty");
-  empty.onclick = emptyCoop;
+  empty.id = "emptyCoop";
   empty.innerText = "Ausstallen und archivieren";
 
   inputBlock.appendChild(inputField);
@@ -166,13 +178,12 @@ function createCoop(
 }
 
 /*toggle Funktion um Details anzuzeigen */
-
 const toggleButtons = document.querySelectorAll("#toggleBtn");
 
 toggleButtons.forEach((button) => {
   button.addEventListener("click", () => {
-    // Findet das direkt dazugehörige Inhalts-Div
-    // (Beispiel: Das nächste Element im HTML nach dem Button)
+    /* findet das direkt dazugehörige Inhalts-Div
+    (Beispiel: Das nächste Element im HTML nach dem Button) */
     const content = button.nextElementSibling;
 
     if (content) {
@@ -182,19 +193,28 @@ toggleButtons.forEach((button) => {
 });
 
 /*Eier hinzufügen*/
+/* querySelectorAll nimmt alle elemente mit dieser ID.
+ACHTUNG: geht nur, weil jeder coop eine einzigartige ID hat, sonst .classname nehmen*/
 const addEggsBtns = document.querySelectorAll("#addEggs");
-
+/*geht jeden passenden button durch, dass es auf alle anwendbar ist*/
 addEggsBtns.forEach((button) => {
   button.addEventListener("click", () => {
+    /*checkt die ID des coop ab*/
     const boxID = parseInt(button.closest(".coop").id);
     const gefundenesCoop = coopList.find((coop) => coop.id === boxID);
+    /*addiert den wert des vorherigen elements (inputfield)*/
     let content = parseInt(button.previousElementSibling.value);
+    /*summiert diesen wert zum vorhandenen wert im objekt*/
     gefundenesCoop.eggsDay += content;
+    /*definiert dem Objekt ein startdatum für tagesdurchschnitt 
+    wenn das erste mal eier dazugefügt werden*/
     if (gefundenesCoop.eggsTotal === 0) {
       gefundenesCoop.startDate = Date.now();
     }
+    /*addiert den wert auch zum vorhandenen wert total eier*/
     gefundenesCoop.eggsTotal += content;
     saveCoopListToLocalstorage();
+    /*lädt die ganze seite neu um im html zu aktualisieren*/
     location.reload();
   });
 });
@@ -206,6 +226,7 @@ function clean() {}
 function archive() {}
 
 /*Wachtel hinzufügen*/
+/* beschreibung siehe addEggsBtns */
 const plusQuailBtns = document.querySelectorAll("#plusQuail");
 
 plusQuailBtns.forEach((button) => {
@@ -223,6 +244,7 @@ plusQuailBtns.forEach((button) => {
 });
 
 /*Wachtel ausstallen*/
+/* beschreibung siehe addEggsBtns */
 const minusQuailBtns = document.querySelectorAll("#minusQuail");
 
 minusQuailBtns.forEach((button) => {
@@ -247,35 +269,33 @@ function emptyCoop() {}
 
 /*Daily Reset Eggs*/
 function checkDailyReset() {
-  const jetzt = Date.now(); // Die aktuelle Zeit in Millisekunden
+  const jetzt = Date.now();
+  /*Erstellt einen Zustandsschalter (Flag) mit dem Startwert false. 
+  Er merkt sich, ob im Verlauf der Funktion Daten geändert wurden. */
   let listeWurdeGeaendert = false;
 
-  // Wir gehen jeden Stall in deiner Liste durch
   coopList.forEach((coopElement) => {
-    // Ist die aktuelle Zeit größer als die gespeicherte Reset-Zeit?
+    /*handelt wenn die aktuelle Zeit (grösser als) die resetzeit überschritten hat*/
     if (jetzt >= coopElement.dailyEggReset) {
-      // 1. Tageseier löschen
       coopElement.eggsDay = 0;
-
-      // 2. Den neuen Reset-Wecker für den kommenden Abend (23:59 Uhr) stellen
+      /*definiert neue resetzeit*/
       const morgenAbend = new Date();
       morgenAbend.setHours(23, 59, 0, 0);
-
-      // Falls der Reset aus irgendeinem Grund erst am Folgetag bemerkt wird,
-      // stellen wir sicher, dass der Wecker in der Zukunft landet
+      /*Sicherheitsprüfung: Wenn die berechneten 23:59 Uhr (als Millisekunden) 
+      vor oder gleich der aktuellen Zeit jetzt liegen (weil es z. B. schon 23:59:15 Uhr ist), 
+      wird der Codeblock ausgeführt. */
       if (morgenAbend.getTime() <= jetzt) {
+        /*erhöht das datum mit +1*/
         morgenAbend.setDate(morgenAbend.getDate() + 1);
       }
-
+      /*schreibt die neue resetzeit wieder als millisekunden ins array*/
       coopElement.dailyEggReset = morgenAbend.getTime();
-      listeWurdeGeaendert = true; // Wir merken uns, dass wir speichern müssen
+      /*Schaltet das Flag auf true, da an diesem Element Änderungen vorgenommen wurden.*/
+      listeWurdeGeaendert = true;
     }
   });
-
-  // Nur wenn sich wirklich etwas geändert hat, schreiben wir in den LocalStorage
   if (listeWurdeGeaendert) {
     saveCoopListToLocalstorage();
-    // Optional: Seite neu laden, damit das HTML die genullten Werte anzeigt
     location.reload();
   }
 }
