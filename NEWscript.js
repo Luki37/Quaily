@@ -13,7 +13,8 @@ function saveArchiveListToLocalstorage() {
 }
 
 if (newCoopList !== null) {
-  newCoopList.forEach((coopElement) => {
+  coopList = newCoopList;
+  coopList.forEach((coopElement) => {
     const coopName = coopElement.name;
     const coopID = coopElement.id;
     const anzahlWachteln = coopElement.anzahlWachteln;
@@ -31,6 +32,8 @@ if (newCoopList !== null) {
   });
 }
 
+checkDailyReset();
+
 function addCoop() {
   const coopName = prompt("Name für den Stall eingeben");
   if (coopName === null) {
@@ -39,6 +42,9 @@ function addCoop() {
   const coopID = Date.now();
   createCoop(coopName, coopID);
 
+  const heuteAbend = new Date();
+  heuteAbend.setHours(23, 59, 0, 0);
+
   const coopElement = {
     name: coopName,
     id: coopID,
@@ -46,6 +52,7 @@ function addCoop() {
     eggsDay: 0,
     eggsTotal: 0,
     eggsAverage: 0,
+    dailyEggReset: heuteAbend.getTime(),
     startDate: 0,
     endDate: 0,
   };
@@ -225,6 +232,41 @@ minusQuailBtns.forEach((button) => {
 
 /*Alles Ausstallen*/
 function emptyCoop() {}
+
+/*Daily Reset Eggs*/
+function checkDailyReset() {
+  const jetzt = Date.now(); // Die aktuelle Zeit in Millisekunden
+  let listeWurdeGeaendert = false;
+
+  // Wir gehen jeden Stall in deiner Liste durch
+  coopList.forEach((coopElement) => {
+    // Ist die aktuelle Zeit größer als die gespeicherte Reset-Zeit?
+    if (jetzt >= coopElement.dailyEggReset) {
+      // 1. Tageseier löschen
+      coopElement.eggsDay = 0;
+
+      // 2. Den neuen Reset-Wecker für den kommenden Abend (23:59 Uhr) stellen
+      const morgenAbend = new Date();
+      morgenAbend.setHours(23, 59, 0, 0);
+
+      // Falls der Reset aus irgendeinem Grund erst am Folgetag bemerkt wird,
+      // stellen wir sicher, dass der Wecker in der Zukunft landet
+      if (morgenAbend.getTime() <= jetzt) {
+        morgenAbend.setDate(morgenAbend.getDate() + 1);
+      }
+
+      coopElement.dailyEggReset = morgenAbend.getTime();
+      listeWurdeGeaendert = true; // Wir merken uns, dass wir speichern müssen
+    }
+  });
+
+  // Nur wenn sich wirklich etwas geändert hat, schreiben wir in den LocalStorage
+  if (listeWurdeGeaendert) {
+    saveCoopListToLocalstorage();
+    // Optional: Seite neu laden, damit das HTML die genullten Werte anzeigt
+    location.reload();
+  }
+}
 
 /*Füttern zurücksetzen*/
 function feed() {}
