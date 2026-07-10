@@ -12,11 +12,16 @@ function saveArchiveListToLocalstorage() {
   localStorage.setItem("archiveList", JSON.stringify(archiveList));
 }
 
+/* function saveNumberQuailToLocalstorage(content) {
+  localStorage.setItem("NumberQuail", JSON.stringify(content));
+} */
+
 if (newCoopList !== null) {
   newCoopList.forEach((coopElement) => {
     const coopName = coopElement.name;
     const coopID = coopElement.id;
-    createCoop(coopName, coopID);
+    const anzahlWachteln = coopElement.anzahlWachteln;
+    createCoop(coopName, coopID, anzahlWachteln);
   });
 }
 
@@ -31,27 +36,31 @@ function addCoop() {
   const coopElement = {
     name: coopName,
     id: coopID,
-    /* eggsDay: ,
-    eggsTotal: ,
-    eggsAverage: ,
-    startDate: ,
-    endDate: , */
+    anzahlWachteln: 0,
+    eggsDay: 0,
+    eggsTotal: 0,
+    eggsAverage: 0,
+    startDate: 0,
+    endDate: 0,
   };
 
   coopList.push(coopElement);
   console.log(coopList);
 
   saveCoopListToLocalstorage();
+  location.reload();
 
-  return { coopName: coopName, coopID: coopID };
+  return { coopName: coopName, coopID: coopID, coopElement: coopElement };
 }
 
-function createCoop(coopName, coopID) {
+function createCoop(coopName, coopID, anzahlWachteln) {
   if (newCoopList !== null) {
     coopList = newCoopList;
   }
+
   const coopDash = document.createElement("div");
   coopDash.classList.add("coop");
+  coopDash.id = coopID;
   const coopTitle = document.createElement("p");
   coopTitle.classList.add("coopTitle");
   coopTitle.innerText = coopName;
@@ -78,14 +87,17 @@ function createCoop(coopName, coopID) {
   counting.classList.add("counting");
   const minusOneQuail = document.createElement("button");
   minusOneQuail.classList.add("countBtn");
-  minusOneQuail.onclick = minusQuail;
+  minusOneQuail.id = "minusQuail";
   minusOneQuail.innerText = "-";
   const countQuail = document.createElement("span");
   countQuail.id = "countQuail";
-  countQuail.innerText = "0 Wachteln";
+  countQuail.innerText = anzahlWachteln;
+  const Wachteln = document.createElement("span");
+  Wachteln.innerText = "Wachteln";
+
   const plusOneQuail = document.createElement("button");
   plusOneQuail.classList.add("countBtn");
-  plusOneQuail.onclick = plusQuail;
+  plusOneQuail.id = "plusQuail";
   plusOneQuail.innerText = "+";
   const eggsToday = document.createElement("p");
   eggsToday.id = "eggsToday";
@@ -106,6 +118,7 @@ function createCoop(coopName, coopID) {
 
   counting.appendChild(minusOneQuail);
   counting.appendChild(countQuail);
+  counting.appendChild(Wachteln);
   counting.appendChild(plusOneQuail);
 
   hiddenDiv.appendChild(counting);
@@ -149,10 +162,41 @@ function clean() {}
 function archive() {}
 
 /*Wachtel hinzufügen*/
-function plusQuail() {}
+const plusQuailBtns = document.querySelectorAll("#plusQuail");
+
+plusQuailBtns.forEach((button) => {
+  button.addEventListener("click", () => {
+    const boxID = parseInt(button.closest(".coop").id);
+    const gefundenesCoop = coopList.find((coop) => coop.id === boxID);
+    let content = parseInt(
+      button.previousElementSibling.previousElementSibling.innerText,
+    );
+    content += 1;
+    button.previousElementSibling.previousElementSibling.innerText = content;
+    gefundenesCoop.anzahlWachteln = content;
+    saveCoopListToLocalstorage();
+  });
+});
 
 /*Wachtel ausstallen*/
-function minusQuail() {}
+const minusQuailBtns = document.querySelectorAll("#minusQuail");
+
+minusQuailBtns.forEach((button) => {
+  button.addEventListener("click", () => {
+    const boxID = parseInt(button.closest(".coop").id);
+    const gefundenesCoop = coopList.find((coop) => coop.id === boxID);
+    let content = parseInt(button.nextElementSibling.innerText);
+    if (content > 0) {
+      content -= 1;
+      button.nextElementSibling.innerText = content;
+      gefundenesCoop.anzahlWachteln = content;
+      saveCoopListToLocalstorage();
+    } else {
+      alert("Hier sind keine negativen Zahlen möglich!");
+      return;
+    }
+  });
+});
 
 /*Alles Ausstallen*/
 function emptyCoop() {}
