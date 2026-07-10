@@ -181,6 +181,9 @@ addEggsBtns.forEach((button) => {
     const gefundenesCoop = coopList.find((coop) => coop.id === boxID);
     let content = parseInt(button.previousElementSibling.value);
     gefundenesCoop.eggsDay += content;
+    if (gefundenesCoop.eggsTotal === 0) {
+      gefundenesCoop.startDate = Date.now();
+    }
     gefundenesCoop.eggsTotal += content;
     saveCoopListToLocalstorage();
     location.reload();
