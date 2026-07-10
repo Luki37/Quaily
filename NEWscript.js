@@ -12,16 +12,22 @@ function saveArchiveListToLocalstorage() {
   localStorage.setItem("archiveList", JSON.stringify(archiveList));
 }
 
-/* function saveNumberQuailToLocalstorage(content) {
-  localStorage.setItem("NumberQuail", JSON.stringify(content));
-} */
-
 if (newCoopList !== null) {
   newCoopList.forEach((coopElement) => {
     const coopName = coopElement.name;
     const coopID = coopElement.id;
     const anzahlWachteln = coopElement.anzahlWachteln;
-    createCoop(coopName, coopID, anzahlWachteln);
+    const eggsDay = coopElement.eggsDay;
+    const eggsTotal = coopElement.eggsTotal;
+    const eggsAverage = coopElement.eggsAverage;
+    createCoop(
+      coopName,
+      coopID,
+      anzahlWachteln,
+      eggsDay,
+      eggsTotal,
+      eggsAverage,
+    );
   });
 }
 
@@ -53,7 +59,14 @@ function addCoop() {
   return { coopName: coopName, coopID: coopID, coopElement: coopElement };
 }
 
-function createCoop(coopName, coopID, anzahlWachteln) {
+function createCoop(
+  coopName,
+  coopID,
+  anzahlWachteln,
+  eggsDay,
+  eggsTotal,
+  eggsAverage,
+) {
   if (newCoopList !== null) {
     coopList = newCoopList;
   }
@@ -76,7 +89,7 @@ function createCoop(coopName, coopID, anzahlWachteln) {
   const eggBtn = document.createElement("button");
   eggBtn.classList.add("eggBtn");
   eggBtn.innerText = "Speichern";
-  eggBtn.onclick = addEggs;
+  eggBtn.id = "addEggs";
   const checklist = document.createElement("div");
   checklist.classList.add("checklist");
 
@@ -101,13 +114,13 @@ function createCoop(coopName, coopID, anzahlWachteln) {
   plusOneQuail.innerText = "+";
   const eggsToday = document.createElement("p");
   eggsToday.id = "eggsToday";
-  eggsToday.innerText = "Eier heute total: 0";
-  const eggsTotal = document.createElement("p");
-  eggsTotal.id = "eggsTotal";
-  eggsTotal.innerText = "Total gesammelte Eier: 0";
+  eggsToday.innerText = "Eier heute total: " + eggsDay;
+  const allEggs = document.createElement("p");
+  allEggs.id = "eggsTotal";
+  allEggs.innerText = "Total gesammelte Eier: " + eggsTotal;
   const averageEggPerDay = document.createElement("p");
   averageEggPerDay.id = "averageEggPerDay";
-  averageEggPerDay.innerText = "Tagesdurchschnitt Eier: 0";
+  averageEggPerDay.innerText = "Tagesdurchschnitt Eier: " + eggsAverage;
   const empty = document.createElement("button");
   empty.classList.add("empty");
   empty.onclick = emptyCoop;
@@ -123,7 +136,7 @@ function createCoop(coopName, coopID, anzahlWachteln) {
 
   hiddenDiv.appendChild(counting);
   hiddenDiv.appendChild(eggsToday);
-  hiddenDiv.appendChild(eggsTotal);
+  hiddenDiv.appendChild(allEggs);
   hiddenDiv.appendChild(averageEggPerDay);
   hiddenDiv.appendChild(empty);
 
@@ -153,7 +166,19 @@ toggleButtons.forEach((button) => {
 });
 
 /*Eier hinzufügen*/
-function addEggs() {}
+const addEggsBtns = document.querySelectorAll("#addEggs");
+
+addEggsBtns.forEach((button) => {
+  button.addEventListener("click", () => {
+    const boxID = parseInt(button.closest(".coop").id);
+    const gefundenesCoop = coopList.find((coop) => coop.id === boxID);
+    let content = parseInt(button.previousElementSibling.value);
+    gefundenesCoop.eggsDay += content;
+    gefundenesCoop.eggsTotal += content;
+    saveCoopListToLocalstorage();
+    location.reload();
+  });
+});
 
 /*Ausmisten zurücksetzen*/
 function clean() {}
