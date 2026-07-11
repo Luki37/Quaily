@@ -88,12 +88,16 @@ body {
   padding: 0.5rem;
 }
 
-.toDoBtn {
+.clean,
+.feed,
+.lightOn,
+.lightOff {
   background-color: rgb(235, 232, 55);
   border: none;
   border-radius: 10px;
   color: rgb(24, 3, 211);
   padding: 0.5rem;
+  margin-top: 1rem;
 }
 
 .checkList {

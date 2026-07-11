@@ -37,17 +37,20 @@ Eierzähler zurückgesetzt werden soll*/
 checkDailyReset();
 
 /* berechnet täglicher durchschnittswert eier*/
-newCoopList.forEach((coopElement) => {
-  /* rechnet aktuelle Zeit minus startzeit*/
-  const pastTime = Date.now() - coopElement.startDate;
-  /* teilt durch anzahl Millisekunden pro Tag*/
-  const pastDays = Math.ceil(pastTime / (1000 * 60 * 60 * 24));
-  /* berechnet Durchschnitt*/
-  let average = coopElement.eggsTotal / pastDays;
-  coopElement.eggsAverage = average;
+if (newCoopList !== null) {
+  coopList = newCoopList;
+  coopList.forEach((coopElement) => {
+    /* rechnet aktuelle Zeit minus startzeit*/
+    const pastTime = Date.now() - coopElement.startDate;
+    /* teilt durch anzahl Millisekunden pro Tag*/
+    const pastDays = Math.ceil(pastTime / (1000 * 60 * 60 * 24));
+    /* berechnet Durchschnitt*/
+    let average = coopElement.eggsTotal / pastDays;
+    coopElement.eggsAverage = average;
 
-  saveCoopListToLocalstorage();
-});
+    saveCoopListToLocalstorage();
+  });
+}
 
 function addCoop() {
   /* öffnet mit prompt ein fenster um Namen zu definieren*/
@@ -62,6 +65,14 @@ function addCoop() {
   const heuteAbend = new Date();
   heuteAbend.setHours(23, 59, 0, 0);
 
+  let feedResetTime = new Date();
+
+  /* let cleanResetTime = Date.now(); */
+
+  let lightsOnResetTime = new Date();
+
+  let lightsOffResetTime = new Date();
+
   /* fügt die für berechnungen relevanten werte dem onjekt für das array hinzu*/
   const coopElement = {
     name: coopName,
@@ -74,6 +85,9 @@ function addCoop() {
     (00:00:00 Uhr UTC) und dem in der Variablen heuteAbend gespeicherten 
     Zeitpunkt vergangen sind*/
     dailyEggReset: heuteAbend.getTime(),
+    cleanReset: Date.now(),
+    lightsOn: lightsOnResetTime.getTime(),
+    lightsOff: lightsOffResetTime.getTime(),
     startDate: Date.now(),
     endDate: 0,
   };
@@ -120,6 +134,22 @@ function createCoop(
   eggBtn.id = "addEggs";
   const checklist = document.createElement("div");
   checklist.classList.add("checklist");
+  const feedReset = document.createElement("button");
+  feedReset.classList.add("feed");
+  feedReset.classList.add("hidden");
+  feedReset.innerText = "Füttern";
+  const cleanReset = document.createElement("button");
+  cleanReset.classList.add("clean");
+  cleanReset.classList.add("hidden");
+  cleanReset.innerText = "Ausmisten";
+  const switchLightOn = document.createElement("button");
+  switchLightOn.classList.add("lightOn");
+  switchLightOn.classList.add("hidden");
+  switchLightOn.innerText = "Beleuchtung installieren";
+  const switchLightOff = document.createElement("button");
+  switchLightOff.classList.add("lightOff");
+  switchLightOff.classList.add("hidden");
+  switchLightOff.innerText = "Beleuchtung deinstallieren";
 
   const hiddenDiv = document.createElement("div");
   hiddenDiv.classList.add("hidden");
@@ -171,6 +201,10 @@ function createCoop(
   coopDash.appendChild(coopTitle);
   coopDash.appendChild(inputBlock);
   coopDash.appendChild(checklist);
+  coopDash.appendChild(feedReset);
+  coopDash.appendChild(cleanReset);
+  coopDash.appendChild(switchLightOn);
+  coopDash.appendChild(switchLightOff);
   coopDash.appendChild(toggleBtn);
   coopDash.appendChild(hiddenDiv);
 
@@ -220,7 +254,27 @@ addEggsBtns.forEach((button) => {
 });
 
 /*Ausmisten zurücksetzen*/
-function clean() {}
+const cleanBtns = document.querySelectorAll(".clean");
+
+cleanBtns.forEach((button) => {
+  const boxID = parseInt(button.closest(".coop").id);
+  const gefundenesCoop = coopList.find((coop) => coop.id === boxID);
+
+  if (!gefundenesCoop) return;
+
+  const jetzt = Date.now();
+  const zweiWochen = 1000 * 60 * 60 * 24 * 14;
+  if (jetzt > gefundenesCoop.cleanReset + zweiWochen) {
+    button.classList.remove("hidden");
+  } else {
+    button.classList.add("hidden");
+  }
+  button.addEventListener("click", () => {
+    button.classList.add("hidden");
+    gefundenesCoop.cleanReset = Date.now();
+    saveCoopListToLocalstorage();
+  });
+});
 
 /*Archiv anzeigen*/
 function archive() {}
