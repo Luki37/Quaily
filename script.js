@@ -83,6 +83,25 @@ function addCoop() {
     lightsOff: Date.now(),
     startDate: Date.now(),
     endDate: 0,
+    /* placeholder kann nachträglich wert zugewiesen werden mit: 
+
+    coopList.forEach(coop => {
+    if (coop.placeholderCoop1 === undefined) {
+        coop.placeholderCoop1 = 1;                    Beispiel neuer Wert = 1
+    }
+});
+
+saveCoopListToLocalstorage();*/
+
+    placeholder1: 0,
+    placeholder2: 0,
+    placeholder3: 0,
+    placeholder4: Date.now(),
+    placeholder5: Date.now(),
+    placeholder6: Date.now(),
+    placeholder7: [],
+    placeholder8: [],
+    placeholder9: {},
   };
 
   coopList.push(coopElement);
@@ -91,7 +110,11 @@ function addCoop() {
   location.reload();
 
   /*gibt die elemente für weitere Verwendung ausserhalb der function weiter*/
-  return { coopName: coopName, coopID: coopID, coopElement: coopElement };
+  return {
+    coopName: coopName,
+    coopID: coopID,
+    coopElement: coopElement,
+  };
 }
 
 function createCoop(
