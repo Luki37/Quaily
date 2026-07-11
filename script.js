@@ -65,14 +65,6 @@ function addCoop() {
   const heuteAbend = new Date();
   heuteAbend.setHours(23, 59, 0, 0);
 
-  let feedResetTime = new Date();
-
-  /* let cleanResetTime = Date.now(); */
-
-  let lightsOnResetTime = new Date();
-
-  let lightsOffResetTime = new Date();
-
   /* fügt die für berechnungen relevanten werte dem onjekt für das array hinzu*/
   const coopElement = {
     name: coopName,
@@ -85,9 +77,10 @@ function addCoop() {
     (00:00:00 Uhr UTC) und dem in der Variablen heuteAbend gespeicherten 
     Zeitpunkt vergangen sind*/
     dailyEggReset: heuteAbend.getTime(),
+    feedReset: Date.now(),
     cleanReset: Date.now(),
-    lightsOn: lightsOnResetTime.getTime(),
-    lightsOff: lightsOffResetTime.getTime(),
+    lightsOn: Date.now(),
+    lightsOff: Date.now(),
     startDate: Date.now(),
     endDate: 0,
   };
@@ -136,7 +129,7 @@ function createCoop(
   checklist.classList.add("checklist");
   const feedReset = document.createElement("button");
   feedReset.classList.add("feed");
-  feedReset.classList.add("hidden");
+  /* feedReset.classList.add("hidden"); */
   feedReset.innerText = "Füttern";
   const cleanReset = document.createElement("button");
   cleanReset.classList.add("clean");
@@ -355,7 +348,27 @@ function checkDailyReset() {
 }
 
 /*Füttern zurücksetzen*/
-function feed() {}
+const feedBtns = document.querySelectorAll(".feed");
+
+feedBtns.forEach((button) => {
+  const boxID = parseInt(button.closest(".coop").id);
+  const gefundenesCoop = coopList.find((coop) => coop.id === boxID);
+
+  if (!gefundenesCoop) return;
+
+  const jetzt = Date.now();
+  const feedCountdown = 1000 * 60 * 60 * 22;
+  if (jetzt > gefundenesCoop.feedReset + feedCountdown) {
+    button.classList.remove("hidden");
+  } else {
+    button.classList.add("hidden");
+  }
+  button.addEventListener("click", () => {
+    button.classList.add("hidden");
+    gefundenesCoop.feedReset = Date.now();
+    saveCoopListToLocalstorage();
+  });
+});
 
 /*Licht einschalten zurücksetzen*/
 function lightOn() {}
