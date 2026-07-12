@@ -11,6 +11,7 @@ function saveCoopListToLocalstorage() {
 function saveArchiveListToLocalstorage() {
   localStorage.setItem("archiveList", JSON.stringify(archiveList));
 }
+
 /* fragt ab ob Liste im Localstorage und läd diese, wenn vorhanden*/
 if (newCoopList !== null) {
   coopList = newCoopList;
@@ -45,7 +46,7 @@ if (newCoopList !== null) {
     /* teilt durch anzahl Millisekunden pro Tag*/
     const pastDays = Math.ceil(pastTime / (1000 * 60 * 60 * 24));
     /* berechnet Durchschnitt*/
-    let average = coopElement.eggsTotal / pastDays;
+    let average = Number(coopElement.eggsTotal) / pastDays;
     coopElement.eggsAverage = average;
 
     saveCoopListToLocalstorage();
@@ -144,6 +145,10 @@ function createCoop(
   const inputField = document.createElement("input");
   inputField.classList.add("inputField");
   inputField.placeholder = "Eier";
+  inputField.inputMode = "numeric";
+  inputField.setAttribute("type", "number");
+  inputField.setAttribute("min", "0");
+  inputField.setAttribute("step", "1");
   const eggBtn = document.createElement("button");
   eggBtn.classList.add("eggBtn");
   eggBtn.innerText = "Speichern";
@@ -254,18 +259,24 @@ addEggsBtns.forEach((button) => {
     const gefundenesCoop = coopList.find((coop) => coop.id === boxID);
     /*addiert den wert des vorherigen elements (inputfield)*/
     let content = parseInt(button.previousElementSibling.value);
-    /*summiert diesen wert zum vorhandenen wert im objekt*/
-    gefundenesCoop.eggsDay += content;
-    /*definiert dem Objekt ein startdatum für tagesdurchschnitt 
+    /*prüft dass Eingabefeld nicht leer ist */
+    if (isNaN(content)) {
+      alert("Eigabe darf nicht leer sein!");
+      return;
+    } else {
+      /*summiert diesen wert zum vorhandenen wert im objekt*/
+      gefundenesCoop.eggsDay += content;
+      /*definiert dem Objekt ein startdatum für tagesdurchschnitt 
     wenn das erste mal eier dazugefügt werden*/
-    if (gefundenesCoop.eggsTotal === 0) {
-      gefundenesCoop.startDate = Date.now();
+      if (gefundenesCoop.eggsTotal === 0) {
+        gefundenesCoop.startDate = Date.now();
+      }
+      /*addiert den wert auch zum vorhandenen wert total eier*/
+      gefundenesCoop.eggsTotal += content;
+      saveCoopListToLocalstorage();
+      /*lädt die ganze seite neu um im html zu aktualisieren*/
+      location.reload();
     }
-    /*addiert den wert auch zum vorhandenen wert total eier*/
-    gefundenesCoop.eggsTotal += content;
-    saveCoopListToLocalstorage();
-    /*lädt die ganze seite neu um im html zu aktualisieren*/
-    location.reload();
   });
 });
 
