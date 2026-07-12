@@ -304,7 +304,14 @@ cleanBtns.forEach((button) => {
 });
 
 /*Archiv anzeigen*/
-function archive() {}
+function archive() {
+  if (archiveList == "") {
+    alert("Archiv wurde noch nicht angelegt.");
+    return;
+  } else {
+    return;
+  }
+}
 
 /*Wachtel hinzufügen*/
 /* beschreibung siehe addEggsBtns */
@@ -346,7 +353,13 @@ minusQuailBtns.forEach((button) => {
 });
 
 /*Alles Ausstallen*/
-function emptyCoop() {}
+const emptyBtns = document.querySelectorAll("#emptyCoop");
+
+emptyBtns.forEach((button) => {
+  button.addEventListener("click", () => {
+    alert("Archivierung vorerst noch nicht möglich.");
+  });
+});
 
 /*Daily Reset Eggs*/
 function checkDailyReset() {
