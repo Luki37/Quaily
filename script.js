@@ -404,8 +404,6 @@ minusQuailBtns.forEach((button) => {
 const emptyBtns = document.querySelectorAll("#emptyCoop");
 
 emptyBtns.forEach((button) => {
-  console.log(archiveList);
-
   button.addEventListener("click", () => {
     const boxID = parseInt(button.closest(".coop").id);
     const gefundenesCoop = coopList.find((coop) => coop.id === boxID);
