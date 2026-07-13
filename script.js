@@ -5,6 +5,11 @@ const wrapper = document.getElementById("wrapper");
 const wrapperArchiv = document.getElementById("wrapperArchiv");
 
 let newCoopList = JSON.parse(localStorage.getItem("coopList"));
+let newArchiveList = JSON.parse(localStorage.getItem("archiveList"));
+
+if (newArchiveList !== null) {
+  archiveList = JSON.parse(localStorage.getItem("archiveList"));
+}
 
 function saveCoopListToLocalstorage() {
   localStorage.setItem("coopList", JSON.stringify(coopList));
@@ -306,7 +311,7 @@ cleanBtns.forEach((button) => {
 
 /*Archiv anzeigen*/
 function archive() {
-  if (archiveList == "") {
+  if (archiveList.length === 0) {
     alert("Archiv wurde noch nicht angelegt.");
     return;
   } else {
@@ -357,18 +362,24 @@ minusQuailBtns.forEach((button) => {
 const emptyBtns = document.querySelectorAll("#emptyCoop");
 
 emptyBtns.forEach((button) => {
+  console.log(archiveList);
+
   button.addEventListener("click", () => {
     const boxID = parseInt(button.closest(".coop").id);
     const gefundenesCoop = coopList.find((coop) => coop.id === boxID);
+    /*index des objekts im array ermitteln*/
     const index = coopList.findIndex((coop) => coop.id === boxID);
     if (!gefundenesCoop) return;
+    gefundenesCoop.endDate = Date.now();
+    /* in archivliste einfügen*/
     archiveList.push(gefundenesCoop);
+    console.log(archiveList);
     saveArchiveListToLocalstorage();
+    /*aus coopList löschen anhand ermitteltem index und anzahl zu 
+    löschender objekte, in diesem Fall 1*/
     coopList.splice(index, 1);
     saveCoopListToLocalstorage();
     location.reload();
-
-    /* alert("Archivierung vorerst noch nicht möglich."); */
   });
 });
 
