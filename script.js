@@ -2,6 +2,7 @@ let coopList = [];
 let archiveList = [];
 
 const wrapper = document.getElementById("wrapper");
+const wrapperArchiv = document.getElementById("wrapperArchiv");
 
 let newCoopList = JSON.parse(localStorage.getItem("coopList"));
 
@@ -355,8 +356,10 @@ minusQuailBtns.forEach((button) => {
 /*Alles Ausstallen*/
 const emptyBtns = document.querySelectorAll("#emptyCoop");
 
-emptyBtns.forEach((button) => {
+emptyBtns.forEach((button, coopElement) => {
   button.addEventListener("click", () => {
+    archiveList.push(coopElement);
+
     alert("Archivierung vorerst noch nicht möglich.");
   });
 });
