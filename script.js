@@ -418,7 +418,63 @@ feedBtns.forEach((button) => {
 });
 
 /*Licht einschalten zurücksetzen*/
-function lightOn() {}
+const lighOnBtns = document.querySelectorAll(".lightOn");
+
+lighOnBtns.forEach((button) => {
+  const boxID = parseInt(button.closest(".coop").id);
+  const gefundenesCoop = coopList.find((coop) => coop.id === boxID);
+
+  if (!gefundenesCoop) return;
+  /*setzt das jetztige Datum*/
+  const jetzt = new Date();
+  /*nimmt die Jahreszahl aus dem jeztigen Datum*/
+  const aktuellesJahr = jetzt.getFullYear();
+  /*definiert Zieldatum(Jahr, Monat, Tag, stunde, Minute): 
+  15.SEPTEMBER(!Januar = 0. Monat) 0800 Uhr*/
+  const lightOnDate = new Date(aktuellesJahr, 8, 15, 8, 0, 0);
+
+  /* macht Button sichtbar wenn beide bedingungen erfüllt sind:
+  das Datum überschritten und der Button im aktuellen Jahr noch nicht gebraucht */
+  if (jetzt >= lightOnDate && gefundenesCoop.lightsOn !== aktuellesJahr) {
+    button.classList.remove("hidden");
+  }
+
+  button.addEventListener("click", () => {
+    /* schreibt das aktuelle Jahr in den localstorage, dass der button nur einmal 
+    im Jahr erscheint (siehe Bedingung oben) // macht button wieder unsichtbar*/
+    gefundenesCoop.lightsOn = aktuellesJahr;
+    button.classList.add("hidden");
+    saveCoopListToLocalstorage();
+  });
+});
 
 /*Licht ausschalten zurücksetzen*/
-function lightOff() {}
+const lighOffBtns = document.querySelectorAll(".lightOff");
+
+lighOffBtns.forEach((button) => {
+  const boxID = parseInt(button.closest(".coop").id);
+  const gefundenesCoop = coopList.find((coop) => coop.id === boxID);
+
+  if (!gefundenesCoop) return;
+  /*setzt das jetztige Datum*/
+  const jetzt = new Date();
+  /*nimmt die Jahreszahl aus dem jeztigen Datum*/
+  const aktuellesJahr = jetzt.getFullYear();
+  /*definiert Zieldatum(Jahr, Monat, Tag, stunde, Minute): 
+  26.MÄRZ(!Januar = 0. Monat) 0800 Uhr*/
+  const lightOnDate = new Date(aktuellesJahr, 2, 26, 8, 0, 0);
+
+  /* macht Button sichtbar wenn beide bedingungen erfüllt sind:
+  das Datum überschritten und der Button im aktuellen Jahr noch nicht gebraucht */
+  if (jetzt >= lightOnDate && gefundenesCoop.lightsOff !== aktuellesJahr) {
+    button.classList.remove("hidden");
+  }
+
+  button.addEventListener("click", () => {
+    /* schreibt das aktuelle Jahr in den localstorage, dass der button nur einmal 
+    im Jahr erscheint (siehe Bedingung oben) // macht button wieder unsichtbar*/
+    gefundenesCoop.lightsOff = aktuellesJahr;
+    button.classList.add("hidden");
+    saveCoopListToLocalstorage();
+  });
+});
