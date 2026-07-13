@@ -356,11 +356,19 @@ minusQuailBtns.forEach((button) => {
 /*Alles Ausstallen*/
 const emptyBtns = document.querySelectorAll("#emptyCoop");
 
-emptyBtns.forEach((button, coopElement) => {
+emptyBtns.forEach((button) => {
   button.addEventListener("click", () => {
-    archiveList.push(coopElement);
+    const boxID = parseInt(button.closest(".coop").id);
+    const gefundenesCoop = coopList.find((coop) => coop.id === boxID);
+    const index = coopList.findIndex((coop) => coop.id === boxID);
+    if (!gefundenesCoop) return;
+    archiveList.push(gefundenesCoop);
+    saveArchiveListToLocalstorage();
+    coopList.splice(index, 1);
+    saveCoopListToLocalstorage();
+    location.reload();
 
-    alert("Archivierung vorerst noch nicht möglich.");
+    /* alert("Archivierung vorerst noch nicht möglich."); */
   });
 });
 
