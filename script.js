@@ -238,6 +238,58 @@ function createCoop(
   wrapper.appendChild(coopDash);
 }
 
+function createArchiveElement(coopName, coopElement) {
+  const coopArchive = document.createElement("div");
+  coopArchive.classList.add("coop");
+  coopArchive.classList.add("hidden");
+  const archiveTitle = document.createElement("p");
+  archiveTitle.classList.add("coopTitle");
+  archiveTitle.innerText = coopName;
+  const archivStart = document.createElement("p");
+  const startDatum = new Date(coopElement.startDate);
+  archivStart.innerText = "Start " + startDatum.toLocaleDateString("de-DE");
+  const archivEnd = document.createElement("p");
+  const endDatum = new Date(coopElement.startDate);
+  archivEnd.innerText = "Ende " + endDatum.toLocaleDateString("de-DE");
+  const eierTotal = document.createElement("p");
+  eierTotal.innerText = "Total Eier: " + coopElement.eggsTotal;
+  const EierDurchschnitt = document.createElement("p");
+  EierDurchschnitt.innerText =
+    "Tagesdurchschnitt Eier: " + coopElement.eggsAverage;
+
+  coopArchive.appendChild(archiveTitle);
+  coopArchive.appendChild(archivStart);
+  coopArchive.appendChild(archivEnd);
+  coopArchive.appendChild(eierTotal);
+  coopArchive.appendChild(EierDurchschnitt);
+
+  wrapperArchiv.appendChild(coopArchive);
+
+  return {
+    coopArchive,
+  };
+}
+
+/*Archiv anzeigen*/
+const archiveBtn = document.getElementById("archiviert");
+
+const archivElements = [];
+
+archiveList.forEach((coopElement) => {
+  const element = createArchiveElement(coopElement.name, coopElement);
+  archivElements.push(element.coopArchive);
+});
+
+archiveBtn.addEventListener("click", (coopArchive) => {
+  if (archiveList.length === 0) {
+    alert("Archiv wurde noch nicht angelegt.");
+    return;
+  }
+  archivElements.forEach((coopArchive) => {
+    coopArchive.classList.toggle("hidden");
+  });
+});
+
 /*toggle Funktion um Details anzuzeigen */
 const toggleButtons = document.querySelectorAll("#toggleBtn");
 
@@ -308,16 +360,6 @@ cleanBtns.forEach((button) => {
     saveCoopListToLocalstorage();
   });
 });
-
-/*Archiv anzeigen*/
-function archive() {
-  if (archiveList.length === 0) {
-    alert("Archiv wurde noch nicht angelegt.");
-    return;
-  } else {
-    return;
-  }
-}
 
 /*Wachtel hinzufügen*/
 /* beschreibung siehe addEggsBtns */
