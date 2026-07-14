@@ -68,13 +68,16 @@ function addCoop() {
     return;
   }
   /*erfragt das Intervall ausmisten*/
-  let cleanIntervall = 0;
+  let cleanIntervall;
+  let eingabe;
   do {
+    eingabe = prompt("Anzahl Tage zwischen dem Ausmisten:");
+    /*bricht ab bei "Abbrechen"*/
+    if (eingabe === null) {
+      return;
+    }
     /* parseInt .... , 10 macht aus der eingabe eine Zahl statt einen string*/
-    cleanIntervall = parseInt(
-      prompt("Anzahl Tage zwischen dem Ausmisten:"),
-      10,
-    );
+    cleanIntervall = parseInt(eingabe, 10);
     /* erlaubt nur 0-9 als eingabe*/
   } while (!/^[0-9]+$/.test(cleanIntervall));
 
