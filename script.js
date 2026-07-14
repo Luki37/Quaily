@@ -422,16 +422,21 @@ emptyBtns.forEach((button) => {
     /*index des objekts im array ermitteln*/
     const index = coopList.findIndex((coop) => coop.id === boxID);
     if (!gefundenesCoop) return;
-    gefundenesCoop.endDate = Date.now();
-    /* in archivliste einfügen*/
-    archiveList.push(gefundenesCoop);
-    console.log(archiveList);
-    saveArchiveListToLocalstorage();
-    /*aus coopList löschen anhand ermitteltem index und anzahl zu 
+    if (confirm("Willst du diesen Stall unwiderruflich archivieren?")) {
+      gefundenesCoop.endDate = Date.now();
+      /* in archivliste einfügen*/
+      archiveList.push(gefundenesCoop);
+      console.log(archiveList);
+      saveArchiveListToLocalstorage();
+      /*aus coopList löschen anhand ermitteltem index und anzahl zu 
     löschender objekte, in diesem Fall 1*/
-    coopList.splice(index, 1);
-    saveCoopListToLocalstorage();
-    location.reload();
+      coopList.splice(index, 1);
+      saveCoopListToLocalstorage();
+      location.reload();
+      alert("Stall wurde archiviert.");
+    } else {
+      alert("Archivierung abgebrochen.");
+    }
   });
 });
 
