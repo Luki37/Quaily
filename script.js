@@ -67,6 +67,17 @@ function addCoop() {
   if (coopName === null) {
     return;
   }
+  /*erfragt das Intervall ausmisten*/
+  let cleanIntervall = 0;
+  do {
+    /* parseInt .... , 10 macht aus der eingabe eine Zahl statt einen string*/
+    cleanIntervall = parseInt(
+      prompt("Anzahl Tage zwischen dem Ausmisten:"),
+      10,
+    );
+    /* erlaubt nur 0-9 als eingabe*/
+  } while (!/^[0-9]+$/.test(cleanIntervall));
+
   /* definiert einzigartige ID ahnhand Date.now*/
   const coopID = Date.now();
   createCoop(coopName, coopID);
@@ -102,7 +113,7 @@ function addCoop() {
 
 saveCoopListToLocalstorage();*/
 
-    placeholder1: 0,
+    placeholder1: cleanIntervall,
     placeholder2: 0,
     placeholder3: 0,
     placeholder4: Date.now(),
@@ -120,6 +131,7 @@ saveCoopListToLocalstorage();*/
 
   /*gibt die elemente für weitere Verwendung ausserhalb der function weiter*/
   return {
+    placeholder1: cleanIntervall,
     coopName: coopName,
     coopID: coopID,
     coopElement: coopElement,
@@ -357,7 +369,7 @@ cleanBtns.forEach((button) => {
 
   /* nimmt aktuelles datum und vergleicht mit letztem reset + 2  wochen*/
   const jetzt = Date.now();
-  const zweiWochen = 1000 * 60 * 60 * 24 * 14;
+  const zweiWochen = 1000 * 60 * 60 * 24 * gefundenesCoop.placeholder1;
   /*zeigt button an wenn bedingung erfüllt*/
   if (jetzt > gefundenesCoop.cleanReset + zweiWochen) {
     button.classList.remove("hidden");
