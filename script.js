@@ -4,6 +4,8 @@ let archiveList = [];
 const wrapper = document.getElementById("wrapper");
 const wrapperArchiv = document.getElementById("wrapperArchiv");
 
+/*werden als zwischenspeicher gebraucht, um neue elemente an bestehende 
+arrays hinzuzufügen*/
 let newCoopList = JSON.parse(localStorage.getItem("coopList"));
 let newArchiveList = JSON.parse(localStorage.getItem("archiveList"));
 
@@ -238,6 +240,7 @@ function createCoop(
   wrapper.appendChild(coopDash);
 }
 
+/*erschaffen der elemente, die im archiv angezeigt werden*/
 function createArchiveElement(coopName, coopElement) {
   const coopArchive = document.createElement("div");
   coopArchive.classList.add("coop");
@@ -275,11 +278,15 @@ const archiveBtn = document.getElementById("archiviert");
 
 const archivElements = [];
 
+/* Für jeden Eintrag im Archiv wird ein HTML-Element erstellt.
+Die Referenzen auf diese Elemente werden im Array archivElements gespeichert,
+damit sie später gemeinsam ein- oder ausgeblendet werden können.*/
 archiveList.forEach((coopElement) => {
   const element = createArchiveElement(coopElement.name, coopElement);
   archivElements.push(element.coopArchive);
 });
 
+/*zeigt archiv an sofern es nicht leer ist*/
 archiveBtn.addEventListener("click", (coopArchive) => {
   if (archiveList.length === 0) {
     alert("Archiv wurde noch nicht angelegt.");
@@ -345,15 +352,20 @@ cleanBtns.forEach((button) => {
   const boxID = parseInt(button.closest(".coop").id);
   const gefundenesCoop = coopList.find((coop) => coop.id === boxID);
 
+  /* return wenn kein passendes element gefunden*/
   if (!gefundenesCoop) return;
 
+  /* nimmt aktuelles datum und vergleicht mit letztem reset + 2  wochen*/
   const jetzt = Date.now();
   const zweiWochen = 1000 * 60 * 60 * 24 * 14;
+  /*zeigt button an wenn bedingung erfüllt*/
   if (jetzt > gefundenesCoop.cleanReset + zweiWochen) {
     button.classList.remove("hidden");
   } else {
     button.classList.add("hidden");
   }
+  /*versteckt button wenn geklickt, setzt neues clean datum um das nächste
+  2 Wochen intervall zu berechnen und speichert es im localstorage*/
   button.addEventListener("click", () => {
     button.classList.add("hidden");
     gefundenesCoop.cleanReset = Date.now();
@@ -457,6 +469,7 @@ function checkDailyReset() {
 }
 
 /*Füttern zurücksetzen*/
+/*Beschreibung siehe Ausmisten zurücksetzen*/
 const feedBtns = document.querySelectorAll(".feed");
 
 feedBtns.forEach((button) => {
